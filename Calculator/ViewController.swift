@@ -8,6 +8,13 @@
 import UIKit
 
 class ViewController: UIViewController {
+    
+    let userInterface = UserInterface()
+    
+    override func loadView() {
+        super.loadView()
+        view = userInterface
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
