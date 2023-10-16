@@ -5,6 +5,7 @@
 //  Created by Yevhenii Vladichuk on 15/10/2023.
 //
 
+
 import UIKit
 
 class UserInterface: UIView {
@@ -12,7 +13,6 @@ class UserInterface: UIView {
     let topView: UIView = {
         let topView = UIView()
         topView.translatesAutoresizingMaskIntoConstraints = false
-        topView.backgroundColor = .darkGray
         return topView
     }()
     
@@ -25,19 +25,20 @@ class UserInterface: UIView {
         return vS
     }()
     
-    let computedValue: UILabel = {
-        let computedValue = UILabel()
-        computedValue.translatesAutoresizingMaskIntoConstraints = false
-        computedValue.text = "0"
-        computedValue.font = computedValue.font.withSize(75)
-        computedValue.textColor = .white
-        return computedValue
+    let currentValue: UILabel = {
+        let currentValue = UILabel()
+        currentValue.translatesAutoresizingMaskIntoConstraints = false
+        currentValue.text = "0"
+        currentValue.font = currentValue.font.withSize(75)
+        currentValue.textColor = .white
+        return currentValue
     }()
-    
+            
     var arrayOfStackViews: [UIStackView] = []
     var buttonsArray: [UIButton] = []
     let symbolsArray = ["AC", "+/-", "%", "÷", "7", "8", "9", "×", "4", "5", "6", "-", "1", "2", "3", "+", "0", ".", "="]
     var buttonsCount = 0
+    
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -52,6 +53,18 @@ class UserInterface: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // Reduces the font size of the label title based on the number of digits.
+    func updateCurrentValueFont(_ currentValue: [String]) {
+        if currentValue.count > 8 {
+            self.currentValue.font = self.currentValue.font.withSize(52)
+        } else if currentValue.count > 5 {
+            self.currentValue.font = self.currentValue.font.withSize(65)
+        }else {
+            self.currentValue.font = self.currentValue.font.withSize(75)
+        }
+        self.currentValue.text = currentValue.joined()
+    }
+    
     func configStackViewsInRow() {
         
         for _ in 0...6 {
@@ -64,10 +77,10 @@ class UserInterface: UIView {
     }
     
     func buttonsConfig() {
-        
         for symbol in symbolsArray {
             let button = UIButton()
             button.setTitle(symbol, for: .normal)
+            button.titleLabel?.font = button.titleLabel?.font.withSize(30)
             
             switch symbol {
             case "AC", "+/-", "%":
@@ -84,8 +97,13 @@ class UserInterface: UIView {
         }
     }
     
+    // Adds horizontal stacks and then the buttons.
     func setUpStacksAndButtons() {
-        //add hStackViews from array into bottomVerticalStack
+        
+        let buttonCount = buttonsArray.count
+        //following the index of current button
+        var buttonIndex = 0
+        
         for index in 0...4 {
             let stack = arrayOfStackViews[index]
             verticalStack.addArrangedSubview(stack)
@@ -94,11 +112,13 @@ class UserInterface: UIView {
         for index in 0...3 {
             let stack = arrayOfStackViews[index]
             for _ in 0...3 {
-                stack.addArrangedSubview(buttonsArray.first!)
-                buttonsArray.removeFirst()
+                if buttonIndex < buttonCount {
+                    stack.addArrangedSubview(buttonsArray[buttonIndex])
+                    buttonIndex += 1
+                }
             }
         }
-    
+        
         if arrayOfStackViews.count == 7 {
             let lastRow = arrayOfStackViews[4]
             let stackA = arrayOfStackViews[5]
@@ -108,12 +128,13 @@ class UserInterface: UIView {
             lastRow.addArrangedSubview(stackB)
             
             for _ in 0...2 {
-                if buttonsArray.count == 3 {
-                    stackA.addArrangedSubview(buttonsArray.first!)
-                    buttonsArray.removeFirst()
-                }else {
-                    stackB.addArrangedSubview(buttonsArray.first!)
-                    buttonsArray.removeFirst()
+                if buttonIndex < buttonCount {
+                    if buttonCount - buttonIndex == 3 {
+                        stackA.addArrangedSubview(buttonsArray[buttonIndex])
+                    }else {
+                        stackB.addArrangedSubview(buttonsArray[buttonIndex])
+                    }
+                    buttonIndex += 1
                 }
             }
         }
@@ -124,7 +145,7 @@ class UserInterface: UIView {
         addSubview(verticalStack)
         addSubview(topView)
         
-        topView.addSubview(computedValue)
+        topView.addSubview(currentValue)
         setUpStacksAndButtons()
         
         NSLayoutConstraint.activate([
@@ -138,8 +159,8 @@ class UserInterface: UIView {
             topView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
             topView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
             
-            computedValue.trailingAnchor.constraint(equalTo: topView.trailingAnchor, constant: -10),
-            computedValue.bottomAnchor.constraint(equalTo: topView.bottomAnchor, constant: -10),
+            currentValue.trailingAnchor.constraint(equalTo: topView.trailingAnchor, constant: -10),
+            currentValue.bottomAnchor.constraint(equalTo: topView.bottomAnchor, constant: -10),
         ])
     }
 }
