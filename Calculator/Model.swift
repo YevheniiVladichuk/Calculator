@@ -9,7 +9,9 @@ import Foundation
 
 struct CalculatorModel {
     
-    var currentValue: [String] = [] 
-   
+    var currentValue: [String] = []
+    var previousValue: [Double] = []
+    var sign: [String] = []
+    var resultDouble: Double?
     
 }

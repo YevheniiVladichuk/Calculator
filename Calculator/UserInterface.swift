@@ -29,8 +29,12 @@ class UserInterface: UIView {
         let currentValue = UILabel()
         currentValue.translatesAutoresizingMaskIntoConstraints = false
         currentValue.text = "0"
-        currentValue.font = currentValue.font.withSize(75)
+        currentValue.font = currentValue.font.withSize(85)
+        currentValue.adjustsFontSizeToFitWidth = true
+        currentValue.minimumScaleFactor = 0.2
+        currentValue.numberOfLines = 1
         currentValue.textColor = .white
+        currentValue.textAlignment = .right
         return currentValue
     }()
             
@@ -55,14 +59,23 @@ class UserInterface: UIView {
     
     // Reduces the font size of the label title based on the number of digits.
     func updateCurrentValueFont(_ currentValue: [String]) {
-        if currentValue.count > 8 {
-            self.currentValue.font = self.currentValue.font.withSize(52)
-        } else if currentValue.count > 5 {
-            self.currentValue.font = self.currentValue.font.withSize(65)
+        if currentValue.count > 5 {
+            self.currentValue.font = self.currentValue.font.withSize(80)
         }else {
-            self.currentValue.font = self.currentValue.font.withSize(75)
+            self.currentValue.font = self.currentValue.font.withSize(85)
         }
         self.currentValue.text = currentValue.joined()
+    }
+    
+    func formatNumber(_ value: String)-> String? {
+        if let number = Double(value) {
+            let numberFormater = NumberFormatter()
+            numberFormater.numberStyle = .decimal
+            numberFormater.groupingSeparator = " "
+            numberFormater.groupingSize = 3
+            return numberFormater.string(from: NSNumber(value: number))
+        }
+        return nil
     }
     
     func configStackViewsInRow() {
@@ -160,6 +173,7 @@ class UserInterface: UIView {
             topView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
             
             currentValue.trailingAnchor.constraint(equalTo: topView.trailingAnchor, constant: -10),
+            currentValue.leadingAnchor.constraint(equalTo: topView.leadingAnchor, constant: 10),
             currentValue.bottomAnchor.constraint(equalTo: topView.bottomAnchor, constant: -10),
         ])
     }

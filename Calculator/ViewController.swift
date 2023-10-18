@@ -10,11 +10,7 @@ import UIKit
 class ViewController: UIViewController {
     
     let userInterface = UserInterface()
-    var model = CalculatorModel() {
-        didSet {
-            userInterface.updateCurrentValueFont(model.currentValue)
-        }
-    }
+    var model = CalculatorModel()
     
 
     override func loadView() {
@@ -46,17 +42,19 @@ class ViewController: UIViewController {
             print (model.currentValue)
         case "0"..."9", ".":
             
-            if model.currentValue.count < 12 {
+            if model.currentValue.count < 9 {
                 model.currentValue.append(buttonTitle)
                 let stringValue = model.currentValue.joined()
-                userInterface.currentValue.text = stringValue
+                userInterface.currentValue.text = userInterface.formatNumber(stringValue)
             }
+        case "+/-":
+            
+            
             
         default:
             print("error")
         }
     }
-    
 }
 
 //"AC", "+/-", "%", "÷", "7", "8", "9", "×", "4", "5", "6", "-", "1", "2", "3", "+", "0", ".", "="
