@@ -47,7 +47,7 @@ class ViewController: UIViewController {
                 let stringValue = model.currentValue.joined()
                 userInterface.currentValue.text = userInterface.formatNumber(stringValue)
             }
-        case "+/-":
+        
             
             
             
