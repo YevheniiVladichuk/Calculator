@@ -12,7 +12,7 @@ class ViewController: UIViewController {
     let userInterface = UserInterface()
     var model = CalculatorModel()
     
-
+    
     override func loadView() {
         super.loadView()
         view = userInterface
@@ -32,29 +32,46 @@ class ViewController: UIViewController {
     
     @objc func buttonTapped(_ sender: UIButton) {
         
-        let buttonTitle = sender.currentTitle!
+        let buttonValue = sender.currentTitle!
         
-        switch buttonTitle {
+        switch buttonValue {
+            
         case "AC":
             model.currentValue = []
             userInterface.currentValue.text = "0"
             
-            print (model.currentValue)
-        case "0"..."9", ".":
+        case "0"..."9", ",":
             
-            if model.currentValue.count < 9 {
-                model.currentValue.append(buttonTitle)
-                let stringValue = model.currentValue.joined()
-                userInterface.currentValue.text = userInterface.formatNumber(stringValue)
+            if !model.currentValue.contains(",") {
+                if model.currentValue.count < 9 {
+                    model.currentValue.append(buttonValue)
+                    updateDisplay()
+                }
+            }else if model.currentValue.contains(",") {
+                if model.currentValue.count < 10 {
+                    model.currentValue.append(buttonValue)
+                    updateDisplay()
+                }
             }
-        
             
+//        case "+":
             
             
         default:
             print("error")
         }
     }
+    
+    func updateDisplay() {
+        
+        let stringValue = model.currentValue.joined()
+        if !stringValue.contains(","){
+            userInterface.currentValue.text = userInterface.formatNumber(stringValue)
+        }else {
+            userInterface.currentValue.text = stringValue
+        }
+    }
+    
 }
 
 //"AC", "+/-", "%", "÷", "7", "8", "9", "×", "4", "5", "6", "-", "1", "2", "3", "+", "0", ".", "="

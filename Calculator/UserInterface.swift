@@ -40,7 +40,7 @@ class UserInterface: UIView {
             
     var arrayOfStackViews: [UIStackView] = []
     var buttonsArray: [UIButton] = []
-    let symbolsArray = ["AC", "+/-", "%", "÷", "7", "8", "9", "×", "4", "5", "6", "-", "1", "2", "3", "+", "0", ".", "="]
+    let symbolsArray = ["AC", "+/-", "%", "÷", "7", "8", "9", "×", "4", "5", "6", "-", "1", "2", "3", "+", "0", ",", "="]
     var buttonsCount = 0
     
     
@@ -68,6 +68,7 @@ class UserInterface: UIView {
     }
     
     func formatNumber(_ value: String)-> String? {
+        
         if let number = Double(value) {
             let numberFormater = NumberFormatter()
             numberFormater.numberStyle = .decimal

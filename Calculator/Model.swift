@@ -14,4 +14,8 @@ struct CalculatorModel {
     var sign: [String] = []
     var resultDouble: Double?
     
+    mutating func add() {
+        
+    }
+
 }
