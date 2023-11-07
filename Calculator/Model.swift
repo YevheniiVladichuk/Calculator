@@ -9,13 +9,32 @@ import Foundation
 
 struct CalculatorModel {
     
-    var currentValue: [String] = []
-    var previousValue: [Double] = []
-    var sign: [String] = []
-    var resultDouble: Double?
+    var currentValue: String = "0"
+    var currentOperation: String = ""
+    var previousValue: Double = 0.0
     
-    mutating func add() {
+    mutating func addNumber(number: String) {
+        if currentValue == "0" {
+            currentValue = number
+        }else {
+            currentValue += number
+        }
+    }
+    
+    mutating func addOperation(operation: String) {
+        
+        
+        if previousValue == 0.0 {
+            previousValue = Double(currentValue)!
+            currentValue = "0"
+            currentOperation = operation
+        }else {
+            
+            //add logic
+            
+        }
+        
         
     }
-
+    
 }

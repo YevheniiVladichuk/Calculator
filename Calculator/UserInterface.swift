@@ -25,22 +25,21 @@ class UserInterface: UIView {
         return vS
     }()
     
-    let currentValue: UILabel = {
-        let currentValue = UILabel()
-        currentValue.translatesAutoresizingMaskIntoConstraints = false
-        currentValue.text = "0"
-        currentValue.font = currentValue.font.withSize(85)
-        currentValue.adjustsFontSizeToFitWidth = true
-        currentValue.minimumScaleFactor = 0.2
-        currentValue.numberOfLines = 1
-        currentValue.textColor = .white
-        currentValue.textAlignment = .right
-        return currentValue
+    let inputNumberLabel: UILabel = {
+        let inputNumberLabel = UILabel()
+        inputNumberLabel.translatesAutoresizingMaskIntoConstraints = false
+        inputNumberLabel.font = inputNumberLabel.font.withSize(85)
+        inputNumberLabel.adjustsFontSizeToFitWidth = true
+        inputNumberLabel.minimumScaleFactor = 0.2
+        inputNumberLabel.numberOfLines = 1
+        inputNumberLabel.textColor = .white
+        inputNumberLabel.textAlignment = .right
+        return inputNumberLabel
     }()
             
     var arrayOfStackViews: [UIStackView] = []
     var buttonsArray: [UIButton] = []
-    let symbolsArray = ["AC", "+/-", "%", "÷", "7", "8", "9", "×", "4", "5", "6", "-", "1", "2", "3", "+", "0", ",", "="]
+    let symbolsArray = ["AC", "+/-", "%", "÷", "7", "8", "9", "×", "4", "5", "6", "-", "1", "2", "3", "+", "0", ".", "="]
     var buttonsCount = 0
     
     
@@ -60,11 +59,11 @@ class UserInterface: UIView {
     // Reduces the font size of the label title based on the number of digits.
     func updateCurrentValueFont(_ currentValue: [String]) {
         if currentValue.count > 5 {
-            self.currentValue.font = self.currentValue.font.withSize(80)
+            self.inputNumberLabel.font = self.inputNumberLabel.font.withSize(80)
         }else {
-            self.currentValue.font = self.currentValue.font.withSize(85)
+            self.inputNumberLabel.font = self.inputNumberLabel.font.withSize(85)
         }
-        self.currentValue.text = currentValue.joined()
+        self.inputNumberLabel.text = currentValue.joined()
     }
     
     func formatNumber(_ value: String)-> String? {
@@ -159,7 +158,7 @@ class UserInterface: UIView {
         addSubview(verticalStack)
         addSubview(topView)
         
-        topView.addSubview(currentValue)
+        topView.addSubview(inputNumberLabel)
         setUpStacksAndButtons()
         
         NSLayoutConstraint.activate([
@@ -173,9 +172,9 @@ class UserInterface: UIView {
             topView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
             topView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
             
-            currentValue.trailingAnchor.constraint(equalTo: topView.trailingAnchor, constant: -10),
-            currentValue.leadingAnchor.constraint(equalTo: topView.leadingAnchor, constant: 10),
-            currentValue.bottomAnchor.constraint(equalTo: topView.bottomAnchor, constant: -10),
+            inputNumberLabel.trailingAnchor.constraint(equalTo: topView.trailingAnchor, constant: -10),
+            inputNumberLabel.leadingAnchor.constraint(equalTo: topView.leadingAnchor, constant: 10),
+            inputNumberLabel.bottomAnchor.constraint(equalTo: topView.bottomAnchor, constant: -10),
         ])
     }
 }

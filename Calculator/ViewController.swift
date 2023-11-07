@@ -21,7 +21,8 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
+        
+        userInterface.inputNumberLabel.text = model.currentValue
         
         for (index, button) in userInterface.buttonsArray.enumerated() {
             button.addTarget(self, action: #selector(buttonTapped(_:)), for: .touchUpInside)
@@ -33,29 +34,26 @@ class ViewController: UIViewController {
     @objc func buttonTapped(_ sender: UIButton) {
         
         let buttonValue = sender.currentTitle!
+//        print("Нажата кнопка: \(buttonValue)")
+        
         
         switch buttonValue {
             
         case "AC":
-            model.currentValue = []
-            userInterface.currentValue.text = "0"
+            model.currentValue = "0"
+            userInterface.inputNumberLabel.text = "0"
+//            print (model.currentValue)
             
-        case "0"..."9", ",":
-            
-            if !model.currentValue.contains(",") {
-                if model.currentValue.count < 9 {
-                    model.currentValue.append(buttonValue)
-                    updateDisplay()
-                }
-            }else if model.currentValue.contains(",") {
-                if model.currentValue.count < 10 {
-                    model.currentValue.append(buttonValue)
-                    updateDisplay()
-                }
+        case "0"..."9", ".":
+            if (!model.currentValue.contains(".") && model.currentValue.count < 9) || (model.currentValue.contains(".") && model.currentValue.count < 10 && buttonValue != ".") {
+                model.addNumber(number: buttonValue)
+                
+                updateDisplay()
             }
+        case "+/-", "%", "÷", "×", "-", "+", "=":
             
-//        case "+":
-            
+            model.addOperation(operation: buttonValue)
+           
             
         default:
             print("error")
@@ -63,15 +61,11 @@ class ViewController: UIViewController {
     }
     
     func updateDisplay() {
-        
-        let stringValue = model.currentValue.joined()
-        if !stringValue.contains(","){
-            userInterface.currentValue.text = userInterface.formatNumber(stringValue)
+        let stringValue = model.currentValue
+        if !stringValue.contains("."){
+            userInterface.inputNumberLabel.text = userInterface.formatNumber(stringValue)
         }else {
-            userInterface.currentValue.text = stringValue
+            userInterface.inputNumberLabel.text = stringValue
         }
     }
-    
 }
-
-//"AC", "+/-", "%", "÷", "7", "8", "9", "×", "4", "5", "6", "-", "1", "2", "3", "+", "0", ".", "="
