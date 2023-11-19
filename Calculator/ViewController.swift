@@ -22,7 +22,7 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        userInterface.inputNumberLabel.text = model.currentValue
+        userInterface.inputNumberLabel.text = "0"
         
         for (index, button) in userInterface.buttonsArray.enumerated() {
             button.addTarget(self, action: #selector(buttonTapped(_:)), for: .touchUpInside)
@@ -40,20 +40,18 @@ class ViewController: UIViewController {
         switch buttonValue {
             
         case "AC":
-            model.currentValue = "0"
+            model.allClear()
             userInterface.inputNumberLabel.text = "0"
-//            print (model.currentValue)
             
         case "0"..."9", ".":
-            if (!model.currentValue.contains(".") && model.currentValue.count < 9) || (model.currentValue.contains(".") && model.currentValue.count < 10 && buttonValue != ".") {
+            
+            if (!model.displayValue.contains(".") && model.displayValue.count < 9) || (model.displayValue.contains(".") && model.displayValue.count < 10 && buttonValue != ".") {
                 model.addNumber(number: buttonValue)
-                
                 updateDisplay()
             }
-        case "+/-", "%", "÷", "×", "-", "+", "=":
-            
-            model.addOperation(operation: buttonValue)
-           
+        case "+/-", "%", "÷", "×", "-", "+":
+    
+            model.operation(operation: buttonValue)
             
         default:
             print("error")
@@ -61,7 +59,7 @@ class ViewController: UIViewController {
     }
     
     func updateDisplay() {
-        let stringValue = model.currentValue
+        let stringValue = model.displayValue
         if !stringValue.contains("."){
             userInterface.inputNumberLabel.text = userInterface.formatNumber(stringValue)
         }else {
