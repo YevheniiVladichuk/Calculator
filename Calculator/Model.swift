@@ -10,84 +10,53 @@ import Foundation
 struct CalculatorModel {
     
     var displayValue: String = "0"
-    var currentOperationEnum: CalculatorOperation?
-    var previousValue: Double = 0.0
-    var accumulator: Double?
-    var resultString: String?
-    
-    enum CalculatorOperation: String {
-        case toggleSign = "+/-"
-        case percent = "%"
-        case divide = "÷"
-        case multiply = "×"
-        case subtract = "-"
-        case add = "+"
-        case equals = "="
-    }
+    var currentOperation: String?
+    var operand: Double?
+    var accumulator = 0.0
+    var isOperationJustPerformed = false
     
     mutating func allClear() {
-        
         displayValue = "0"
-        currentOperationEnum = nil
-        previousValue = 0.0
-        accumulator = nil
-        resultString = "0"
-        
-
-        
+        currentOperation = nil
+        accumulator = 0.0
+        isOperationJustPerformed = false
     }
     
     mutating func addNumber(number: String) {
-        if displayValue == "0" {
+        
+        operand = nil
+        
+        if displayValue == "0" || isOperationJustPerformed {
             displayValue = number
         }else {
             displayValue += number
         }
     }
     
+    //не отображает сумму после второго плюса !
+    //сама логика работает
+    
     mutating func operation(operation: String) {
         
-        guard let enumOperation = CalculatorOperation(rawValue: operation) else {
-            print("не известная операция")
+        guard let displayValueAsDouble = Double(displayValue) else {
+            print("error guard displayValueAsDouble")
             return
         }
+        operand = displayValueAsDouble //число на дисплее стало операндом
+        currentOperation = operation
+        isOperationJustPerformed = true
+        print("opperand = \(operand!)")
+        print("operation = \(currentOperation!)")
         
-        print (enumOperation)
-        
-        if let currentValueAsDouble = Double(displayValue) {
+        if let currentOp = currentOperation {
             
-            print("currentValueAsDouble = \(currentValueAsDouble)")
-            
-            if let currentOpEnum = currentOperationEnum {
-                
-                switch currentOpEnum {
-                case .add:
-                    accumulator = (accumulator ?? previousValue) + currentValueAsDouble
-                default:
-                    break
-                }
-            }else {
-                accumulator = currentValueAsDouble
+            switch currentOp {
+            case "+":
+                accumulator = accumulator + operand!
+                print("accumulator value = \(accumulator)")
+            default:
+                break
             }
-            
         }
-        
-        if enumOperation != .equals {
-            previousValue = accumulator ?? 0.0
-            displayValue = "0" // Сбросить currentValue после выполнения операции
-        } else {
-            // Для операции равно, обновляем previousValue и currentValue
-            previousValue = accumulator ?? 0.0
-            displayValue = String(previousValue)
-        }
-        
-        
-        
-        currentOperationEnum = enumOperation != .equals ? enumOperation : nil
-        
-        
-        
-        
     }
-    
 }
