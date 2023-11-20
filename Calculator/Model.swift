@@ -10,53 +10,92 @@ import Foundation
 struct CalculatorModel {
     
     var displayValue: String = "0"
-    var currentOperation: String?
+    var currentOperator: String?
     var operand: Double?
     var accumulator = 0.0
+    var result: Double?
     var isOperationJustPerformed = false
     
     mutating func allClear() {
         displayValue = "0"
-        currentOperation = nil
+        currentOperator = nil
         accumulator = 0.0
         isOperationJustPerformed = false
     }
     
+    // Adding the number on the display
     mutating func addNumber(number: String) {
-        
-        operand = nil
-        
-        if displayValue == "0" || isOperationJustPerformed {
-            displayValue = number
-        }else {
-            displayValue += number
-        }
+        if isOperationJustPerformed || displayValue == "0"  {
+               displayValue = number
+               isOperationJustPerformed = false
+           } else {
+               displayValue += number
+               print(displayValue)
+           }
+           operand = Double(displayValue)
     }
-    
-    //не отображает сумму после второго плюса !
-    //сама логика работает
-    
-    mutating func operation(operation: String) {
-        
+   
+    // Converting the number on the display from String to Double
+    mutating func displayValueAsDouble() {
         guard let displayValueAsDouble = Double(displayValue) else {
             print("error guard displayValueAsDouble")
             return
         }
-        operand = displayValueAsDouble //число на дисплее стало операндом
-        currentOperation = operation
-        isOperationJustPerformed = true
-        print("opperand = \(operand!)")
-        print("operation = \(currentOperation!)")
+        if accumulator == 0 {
+            accumulator = displayValueAsDouble
+        }else {
+            operand = displayValueAsDouble
+        }
+    }
+
+    
+    mutating func onOperatorSelected(_ mathOperator: String) {
         
-        if let currentOp = currentOperation {
-            
-            switch currentOp {
-            case "+":
-                accumulator = accumulator + operand!
+        if isOperationJustPerformed {
+            currentOperator = mathOperator
+            return
+        }
+        
+        if let currentOperator = currentOperator {
+            calculate(currentOperator)
+            displayValue = String(accumulator)
+        }else {
+            displayValueAsDouble()
+        }
+        
+        isOperationJustPerformed = true
+        currentOperator = mathOperator
+        operand = nil
+        
+    }
+    
+    mutating func calculate(_ mathOperator: String) {
+        
+        switch mathOperator {
+        case "+":
+            accumulator = accumulator + operand!
+            print("accumulator value = \(accumulator)")
+        case "-":
+            accumulator = accumulator - operand!
+            print("accumulator value = \(accumulator)")
+        case "×":
+            accumulator = accumulator * operand!
+            print("accumulator value = \(accumulator)")
+        case "÷":
+            if operand != 0 {
+                accumulator = accumulator / operand!
                 print("accumulator value = \(accumulator)")
-            default:
-                break
+            } else {
+                print("Division by zero")
             }
+        case "%":
+            accumulator = accumulator.truncatingRemainder(dividingBy: operand!)
+            print("accumulator value = \(accumulator)")
+        case "+/-":
+            accumulator = -accumulator
+            print("accumulator value = \(accumulator)")
+        default:
+            break
         }
     }
 }

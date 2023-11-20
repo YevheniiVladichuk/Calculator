@@ -34,9 +34,7 @@ class ViewController: UIViewController {
     @objc func buttonTapped(_ sender: UIButton) {
         
         let buttonValue = sender.currentTitle!
-//        print("Нажата кнопка: \(buttonValue)")
-        
-        
+
         switch buttonValue {
             
         case "AC":
@@ -44,14 +42,13 @@ class ViewController: UIViewController {
             userInterface.inputNumberLabel.text = "0"
             
         case "0"..."9", ".":
-            
             if (!model.displayValue.contains(".") && model.displayValue.count < 9) || (model.displayValue.contains(".") && model.displayValue.count < 10 && buttonValue != ".") {
                 model.addNumber(number: buttonValue)
                 updateDisplay()
             }
         case "+/-", "%", "÷", "×", "-", "+":
-    
-            model.operation(operation: buttonValue)
+            model.onOperatorSelected(buttonValue)
+            updateDisplay()
             
         default:
             print("error")
